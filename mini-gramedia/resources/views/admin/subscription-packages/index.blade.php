@@ -15,7 +15,7 @@
 
     <div class="container card">
         <div class="card-body">
-            <table class="table table-bordered table-responsive bg-white">
+            <table class="table table-bordered table-responsive bg-white" id="subscription-packages-table">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -27,31 +27,63 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($subscriptionPackages as $subscriptionPackage)
-                        {{-- penggunaan foreach karena bookCategories merupakan array multidimensi maka bookCategry akan berupa array asosiatif.
-                        mengaksesnya dengan menggunakan -> atau --}}
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            {{-- loop iteration-> fungsinyay untuk menampilkan no urut --}}
-                            <td>{{ $subscriptionPackage->name }}</td>
-                            <td>{{ $subscriptionPackage->description }}</td>
-                            <td>{{ $subscriptionPackage->color }}</td>
-                            <td>{{ $subscriptionPackage->price }}</td>
-                            <td>
-                                <a href="{{ route('admin.subscription-packages.edit', $subscriptionPackage->id) }}"
-                                    class="btn btn-sm btn-warning">Edit</a>
-                                <form action="{{ route('admin.subscription-packages.destroy', $subscriptionPackage->id) }}"
-                                    method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button tupe="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus paket langganan ini?')">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $("#subscription-packages-table").DataTable({
+                // menampilkan icon looading
+                processing: true,
+                // menggunakan server side (data diproses di controller)
+                serverSide: true,
+                // routing yang memproses datatables
+                ajax: "{{ route('admin.subscription-packages.index') }}",
+                // isi td dari tablenya
+                columns: [
+                    // data dan name : nama kolom, searchable: bisa di search ga datanya, orderable: bisa di urutin ga datanya
+                    {
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                        name: 'name',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'description',
+                        name: 'description',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'color',
+                        name: 'color',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'price',
+                        name: 'price',
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
+            })
+        });
+    </script>
+@endpush

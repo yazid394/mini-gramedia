@@ -1,16 +1,15 @@
 <?php
 
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookCategoryController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SubscriptionPackageController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-
-Route::get('/', function () {
-        $subscriptionPackages = \App\Models\SubscriptionPackage::all();
-
-        return view('home', compact('subscriptionPackages'));
-    })->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/search', [HomeController::class, 'search'])->name('search');
+Route::get('/kategori-buku/{id?}', [HomeController::class, 'byCategory'])->name('books.category');
 
 // kelompok root yang boleh di akses nya setelah login
 Route::middleware(['IsLoggedIn'])->group(function () {
@@ -23,6 +22,11 @@ Route::middleware(['IsLoggedIn'])->group(function () {
         Route::get('/dashboard', function () {
             return view('admin.dashboard');
         })->name('dashboard');
+
+        Route::resource('book-categories', BookCategoryController::class);
+        Route::resource('subscription-packages', SubscriptionPackageController::class);
+        Route::resource('books', BookController::class);
+
 
         // resource route untuk mengelola data kategori buku yang otomatis membuat semua method crud
         Route::resource('book-categories', BookCategoryController::class);

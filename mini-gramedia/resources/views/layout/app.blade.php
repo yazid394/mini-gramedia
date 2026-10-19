@@ -18,6 +18,8 @@
     {{-- slick js --}}
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    {{-- CDN Datatables--}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/3.1.2/css/dataTables.dataTables.min.css" />
     <style>
         html, body {
             overflow-x: hidden;
@@ -34,6 +36,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/js/tabler.min.js"></script>
     {{-- slick CDN --}}
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    {{-- CDN Datatables--}}
+    <script src="https://cdn.datatables.net/3.1.2/js/dataTables.min.js"></script>
 
     @stack('scripts')
     <x-footer />

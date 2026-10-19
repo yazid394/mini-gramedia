@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('book_categories', function (Blueprint $table) {
             $table->id(); //primary key
-            $table->string('nama');
+            $table->string('name');
             $table->timestamps();
         });
     }

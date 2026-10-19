@@ -4,19 +4,44 @@ namespace App\Http\Controllers;
 
 use App\Models\SubscriptionPackage;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class SubscriptionPackageController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // all : mengambil semua data dari model BookCategori dan menyimpannya kedalam variabel $book-categories
-        $subscriptionPackages = SubscriptionPackage::all();
-        // compact : membuat array asosiatid dengan key 'bookCategorys' dan value $bookCategorys,
-        // kemudian menhgirimkannya ke view 'admin.book-categories.index'
-        return view('admin.subscription-packages.index', compact('subscriptionPackages'));
+        // request->ajax() jika ada permintaan dari ajac javascript. permintaan proses datatables dipanggi melalui ajax javasciript di bladenya
+        if ($request->ajax()) {
+            $model = SubscriptionPackage::query();
+    
+            return DataTables::eloquent($model)
+            // menambahkan nomor urut data 1-2-dst
+            ->addIndexColumn()
+            // menambhakna data sealin yang ada di database : mengubah data atau untuk btn aksi
+            ->addColumn('action', function($data){
+                $editUrl = route('admin.subscription-packages.edit', $data->id);
+                $deleteUrl = route('admin.subscription-packages.destroy', $data->id);
+                $csrf = csrf_field();
+                $method = method_field('DELETE');
+
+                $btnEdit = '<a href="'. $editUrl . '"class="btn btn-sm btn-warning">Edit</a>';
+                $btnDelete = '<form action="'. $deleteUrl .'"method="POST"
+                    class="d-inline">'. $csrf . $method .'<button tupe="submit"
+                    class="btn btn-sm btn-danger"
+                    onclick="return confirm(\'Apakah Anda yakin ingin menghapus
+                    kategori ini?\')">Hapus</button>
+                    </form>';
+
+                return $btnEdit . $btnDelete;
+            })
+            // menyimpan nama dari add column yang ada html di dalemnya
+            ->rawColumns(['action'])
+            ->toJson();
+        }
+        return view('admin.subscription-packages.index');
     }
 
     /**
